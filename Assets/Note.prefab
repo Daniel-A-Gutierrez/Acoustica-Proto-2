@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6055960918599754723}
-  - component: {fileID: 2709821329846849873}
   - component: {fileID: 7352546053793172727}
+  - component: {fileID: 4526303879937105062}
   m_Layer: 0
   m_Name: Note
   m_TagString: Untagged
@@ -32,20 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2709821329846849873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4440788098887286179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6687ef37595a6c34e897aac55e5008f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tempo: 4
-  beatLife: 120
 --- !u!212 &7352546053793172727
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -94,3 +80,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4526303879937105062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4440788098887286179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79efdd93113c1bb4cb1e8d6ae223dae2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Origin: {fileID: 0}
+  Edges: {fileID: 0}
+  position: 0
+  SpawnTime: 0
+  tempo: 60
+  beatLife: 4

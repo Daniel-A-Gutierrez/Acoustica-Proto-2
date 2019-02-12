@@ -6,9 +6,43 @@ public class EdgeManager : MonoBehaviour
 {
     public LineRenderer olr;
     public LineRenderer tlr;
-    public Vector3 gap ;
+    public Vector3 gap;
     public Vector3[] originPoints;
     public Vector3[] terminalPoints;
+
+    public LINE origin;
+    public LINE terminal;
+
+
+    public struct LINE
+    {
+        public Vector3[] points;
+        public LineRenderer lr;
+        public int offset;
+
+        public LINE(Vector3[] points, LineRenderer lr)
+        {
+            this.points = points;
+            this.lr = lr;
+            offset = 0;
+        }
+
+        public void SetPositions()
+        {
+            lr.SetPositions(points);
+        }
+
+        public void Cycle()
+        {
+            offset++;
+            Vector3 zero = points[0];
+            for (int i = 0; i < 127; i++)
+            {
+                points[i] = points[i + 1];
+            }
+            points[127] = zero;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -29,55 +63,85 @@ public class EdgeManager : MonoBehaviour
 
         olr.SetPositions(originPoints);
         tlr.SetPositions(terminalPoints);
-        terminal_horiz_line(10,4);
-        origin_horiz_line(10,-4);
+
+        LINE origin = new LINE(originPoints, olr);
+        LINE terminal = new LINE(terminalPoints, tlr);
+        horiz_line(10,4,terminal);
+        horiz_line(10,-4,origin);
     }
 
-    public void origin_horiz_line(float width, float y)
+    //function for a horizontal line
+    public void horiz_line(float width,float y,LINE line)
     {
         Vector3[] horiz_line = new Vector3[128];
-        horiz_line[0] = new Vector3(-width/2,y);
-        horiz_line[127] = new Vector3(width/2,y);
-        for(int i = 0 ; i < 128 ; i++)
+        horiz_line[0] = new Vector3(-width / 2, y);
+        horiz_line[127] = new Vector3(width / 2, y);
+        for (int i = 0; i < 128; i++)
         {
-            horiz_line[i] = Vector3.Lerp(horiz_line[0],horiz_line[127],i/127f);
+            horiz_line[i] = Vector3.Lerp(horiz_line[0], horiz_line[127], i / 127f);
         }
-        StartCoroutine(ChangeShape(horiz_line,originPoints,olr,9));
+        StartCoroutine(ChangeShape(horiz_line, line, 9));
     }
 
-    public void terminal_horiz_line(float width, float y)
+
+
+    //this function is for looping forward a raw array. 
+    //DO NOT use for the arrays in LINE objects, use the structs function to track the offset.
+    public void Cycle(Vector3[] points)
     {
-        Vector3[] horiz_line = new Vector3[128];
-        horiz_line[0] = new Vector3(-width/2,y);
-        horiz_line[127] = new Vector3(width/2,y);
-        for(int i = 0 ; i < 128 ; i++)
+        Vector3 zero = points[0];
+        for(int i = 0 ; i < 127 ; i++)
         {
-            horiz_line[i] = Vector3.Lerp(horiz_line[0],horiz_line[127],i/127f);
+            points[i] = points[i+1];
         }
-        StartCoroutine(ChangeShape(horiz_line,terminalPoints,tlr,9));
+        points[127] = zero;
+        //lr.SetPositions(points);
     }
 
-    IEnumerator ChangeShape(Vector3[] newShape, Vector3[] originalShape, LineRenderer lr,float Seconds)//arrays are reference type so OK
+    IEnumerator ChangeShape(Vector3[] newShape,LINE line,float Seconds)
     {
         float StartTime = Time.time;
-        Vector3[] original = new Vector3[128];
-        original = (Vector3[])originalShape.Clone();//shallow copy is OK for v3, probably
-        while(Time.time - StartTime<Seconds)
+        while(Time.time - StartTime < Seconds)
         {
             for(int i = 0 ; i < 128; i++)
             {
-                originalShape[i] = Vector3.Lerp(original[i],newShape[i],(Time.time-StartTime)/Seconds);
+                
+                line.points[i] = Vector3.Lerp(line.points[i],newShape[i], (Time.time-StartTime)/(Seconds+Time.time-StartTime)/Seconds/3);
+                
             }
-            lr.SetPositions(originalShape);
+            line.SetPositions();
             yield return null;
         }
-        originalShape = (Vector3[])newShape.Clone();
-        lr.SetPositions(originalShape);
+        line.points = newShape;
+        line.SetPositions();
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator ChangeAndCycle(Vector3[] newShape, LINE line, float Seconds)
     {
-        
+        float StartTime = Time.time;
+        for (int i = 0; i < line.offset; i++)
+            Cycle(newShape);
+        while (Time.time - StartTime < Seconds)
+        {
+            Cycle(line.points);
+            Cycle(newShape);
+            for (int i = 0; i < 128; i++)
+            {
+
+                line.points[i] = Vector3.Lerp(line.points[i], newShape[i], (Time.time - StartTime) / (Seconds + Time.time - StartTime) / Seconds / 3);
+
+            }
+            line.SetPositions();
+            yield return null;
+        }
+        line.points = newShape;
+        line.SetPositions();
     }
+
+
+    public void Update()
+    {
+       // Cycle(terminalPoints,tlr);
+    }
+
 }
