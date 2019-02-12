@@ -8,11 +8,11 @@ public class TestNote : NoteParent
     new void Start()
     {
         base.Start();
-        position = Random.Range(0, 128);
-        SpawnTime = Time.time;
-        beatLife = 4;
-        tempo = 120;
-        transform.position = Edges.originPoints[position];
+        //position = Random.Range(0, 128);
+        //SpawnTime = Time.time;
+        //beatLife = 4;
+        //tempo = 120;
+        //transform.position = Edges.originPoints[position];
     }
 
 }
