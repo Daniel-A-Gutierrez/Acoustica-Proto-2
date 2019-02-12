@@ -20,20 +20,18 @@ public class NoteOrigin : MonoBehaviour
     {
         int tempo = 60;
         int life = 4;
-        for(int i = 0; i < 25; i++)
+        for(int i = 0; i < 8; i++)
         {
             GameObject go = Instantiate(TestNote,Vector3.zero,Quaternion.identity);
-            go.GetComponent<NoteParent>().Setup(0,i/5f,tempo,life);
+            GameObject go2 = Instantiate(TestNote,Vector3.zero,Quaternion.identity);
+            go.GetComponent<NoteParent>().Setup(0,i,tempo,life);
+            go2.GetComponent<NoteParent>().Setup(127,i,tempo,life);
             go.SetActive(false);
+            go2.SetActive(false);
             Notes.AddLast(go);
+            Notes.AddLast(go2);
         }
-        for(int i = 0; i < 25; i++)
-        {
-            GameObject go = Instantiate(TestNote,Vector3.zero,Quaternion.identity);
-            go.GetComponent<NoteParent>().Setup(i,i/5f+5.2f,tempo,life);
-            go.SetActive(false);
-            Notes.AddLast(go);
-        }
+
     }
 
     // Update is called once per frame
