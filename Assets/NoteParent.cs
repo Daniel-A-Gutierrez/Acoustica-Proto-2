@@ -14,13 +14,13 @@ public class NoteParent : MonoBehaviour
     public float tempo;
     public int beatLife;
     [NonSerialized]
-    public bool setup = false;
+    public bool setup ;
+
     // Start is called before the first frame update
-    protected void Start()
+    public void Awake()
     {
-        GameObject Origin= GameObject.Find("Origin");
+        Origin= GameObject.Find("Origin");
         Edges = Origin.GetComponent<EdgeManager>();
-        //for testing only
     }
 
     public void Setup(int position, float SpawnTime,float tempo, int beatLife)
@@ -32,11 +32,19 @@ public class NoteParent : MonoBehaviour
         setup = true;//flag for whether the note was properly set up
     }
 
-    // Update is called once per frame
-    protected void Update()
+    public void OnEnable()
+    {
+        if(Edges.origin.offset!=0)
+        {
+            position = (position - (Edges.origin.offset % 128) + 128) % 128; //hooray for wayne
+            transform.position = Vector3.Lerp(Edges.origin.points[position],Edges.terminal.points[position],0);
+        }
+    }
+    
+    public void Update()
     {
         float progress = (Time.time - SpawnTime ) / (beatLife/tempo*60);//potential weirdness if not spawning at proper time(ie super speed)
-        transform.position = Vector3.Lerp(Edges.originPoints[position],Edges.terminalPoints[position],progress);
+        transform.position = Vector3.Lerp(Edges.origin.points[position],Edges.terminal.points[position],progress);
         if(progress>1.1f) // fine tune for allowance for hitting notes, etc.
         {
             Destroy(gameObject);

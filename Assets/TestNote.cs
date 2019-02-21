@@ -5,9 +5,9 @@ using UnityEngine;
 public class TestNote : NoteParent
 {
     // Start is called before the first frame update
-    new void Start()
+    void Start()
     {
-        base.Start();
+        //base.Start();
         //position = Random.Range(0, 128);
         //SpawnTime = Time.time;
         //beatLife = 4;

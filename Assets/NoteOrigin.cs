@@ -10,7 +10,7 @@ public class NoteOrigin : MonoBehaviour
     //each frame, check the time, and generate notes from the deque until their start time is past the current time. 
     //"automation notes" will contain a string corresponding to a function, and strings corresponding to args for those functions.
     LinkedList<GameObject> TestNotes;
-    void Awake()
+    void Start()
     {
         TestNotes = new LinkedList<GameObject>();
         GenerateBeatmap(TestNotes);
@@ -24,14 +24,13 @@ public class NoteOrigin : MonoBehaviour
         {
             GameObject go = Instantiate(TestNote,Vector3.zero,Quaternion.identity);
             GameObject go2 = Instantiate(TestNote,Vector3.zero,Quaternion.identity);
-            go.GetComponent<NoteParent>().Setup(0,i,tempo,life);
-            go2.GetComponent<NoteParent>().Setup(127,i,tempo,life);
+            go.GetComponent<NoteParent>().Setup(0 ,i,tempo,life);
+            go2.GetComponent<NoteParent>().Setup(64,i,tempo,life);
             go.SetActive(false);
             go2.SetActive(false);
             Notes.AddLast(go);
             Notes.AddLast(go2);
         }
-
     }
 
     // Update is called once per frame
